@@ -1,0 +1,11 @@
+{
+  "mcpServers": {
+    "airframe": {
+      "command": "/Users/shreyashsingh/Documents/TEST BASED PROJECT/airframe/.venv/bin/python",
+      "args": ["-m", "airframe.mcp.server"],
+      "env": {
+        "AIRFRAME_MCP_ALLOW_RUN": "0"
+      }
+    }
+  }
+}
