@@ -9,7 +9,7 @@ detection, log template mining, ML failure clustering, an LLM triage agent, and 
 server that lets an AI assistant operate the whole lab.
 
 ```
-542 Python tests · 99 C++ tests · 298/298 captures agree with tshark
+548 Python tests · 99 C++ tests · 427/427 captures agree with tshark
 ```
 
 ---
@@ -82,7 +82,7 @@ wrong answers cost.
 make setup      # venv + dependencies (needs Python 3.11+, cmake)
 make sim        # build the C++ simulator
 make corpus     # generate the capture/log corpus (deterministic)
-make test       # 542 tests against the simulator
+make test       # 548 tests against the simulator
 make verify     # the whole pipeline, end to end
 ```
 
@@ -139,12 +139,12 @@ Measured, not asserted — every number below is reproducible with `make verify`
 
 | | |
 | --- | --- |
-| **Dissector accuracy** | 298/298 captures agree with `tshark` frame-for-frame, including deliberately malformed and hostile ones |
+| **Dissector accuracy** | 427/427 captures agree with `tshark` frame-for-frame, including deliberately malformed and hostile ones |
 | **Log compression** | 7,286 log lines → 44 templates (99.4%) |
 | **Failure clustering** | 174 failures → 10 clusters; homogeneity 1.00, completeness 1.00, ARI 1.00 against known injected faults |
 | **Triage accuracy** | 10/10 correct owner attribution across every injected fault |
 | **Determinism** | identical `.pcap`, `.log` and JSON output for a given seed |
-| **Tests** | 542 Python + 99 C++, the latter clean under ASan and UBSan |
+| **Tests** | 548 Python + 99 C++, the latter clean under ASan and UBSan |
 
 On the perfect clustering score: that reflects unusually clean data — a deterministic
 simulator and ten faults engineered to be distinguishable. Real production failures
@@ -186,7 +186,7 @@ and the part that actually teaches. A sample:
 `make help` lists everything. The ones worth knowing:
 
 ```
-make test          542 tests against the simulator
+make test          548 tests against the simulator
 make test-macos    the real-hardware subset against this Mac's Wi-Fi
 make test-flaky    demonstrate flake recording
 make sim-test      99 C++ unit tests

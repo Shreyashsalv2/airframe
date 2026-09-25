@@ -59,7 +59,7 @@ emitted logs and pcap carry realistic millisecond timings.
 
 **The alternative.** Real `sleep()` calls, so the simulation runs at wall-clock speed.
 
-**Why that loses, twice.** It is slow — the 542-test suite would take hours instead of
+**Why that loses, twice.** It is slow — the 548-test suite would take hours instead of
 37 seconds. And it is *flaky*, because wall-clock timing varies with machine load, so
 any assertion about duration becomes a race. Virtual time removes both problems with
 one decision.

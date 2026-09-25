@@ -122,10 +122,16 @@ verify: ## the full pipeline, end to end
 	@echo "=========== 1/9  C++ build + unit tests ==========="
 	@$(MAKE) --no-print-directory sim-test
 	@echo "\n=========== 2/9  determinism check ==========="
-	@./$(SIM_BIN) --scenario wpa3 --fault FOURWAY_M3_TIMEOUT --seed 42 --pcap /tmp/af_a.pcap > /tmp/af_a.json
-	@./$(SIM_BIN) --scenario wpa3 --fault FOURWAY_M3_TIMEOUT --seed 42 --pcap /tmp/af_b.pcap > /tmp/af_b.json
+	@# The simulator exits 1 when an injected fault fires, which is the CORRECT
+	@# behaviour here -- we are deliberately injecting one. `|| true` stops make
+	@# treating that expected exit code as a build failure. What is being checked is
+	@# that two runs with the same seed produce byte-identical artifacts.
+	@./$(SIM_BIN) --scenario wpa3 --fault FOURWAY_M3_TIMEOUT --seed 42 \
+		--pcap /tmp/af_a.pcap > /tmp/af_a.json || true
+	@./$(SIM_BIN) --scenario wpa3 --fault FOURWAY_M3_TIMEOUT --seed 42 \
+		--pcap /tmp/af_b.pcap > /tmp/af_b.json || true
 	@cmp /tmp/af_a.pcap /tmp/af_b.pcap && cmp /tmp/af_a.json /tmp/af_b.json \
-		&& echo "  identical output for the same seed: PASS"
+		&& echo "  identical pcap and JSON for seed 42: PASS"
 	@echo "\n=========== 3/9  pytest against the simulator ==========="
 	@$(PYTEST) --dut=sim -q
 	@echo "\n=========== 4/9  pytest against real macOS Wi-Fi ==========="
