@@ -1,0 +1,27 @@
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+*.egg-info/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+
+# C++ build
+sim/build/
+sim/build-asan/
+compile_commands.json
+
+# secrets
+.env
+
+# generated data — reproducible via `make corpus`
+data/db/
+data/artifacts/
+data/pcaps/
+data/logs/
+data/baselines/
+!data/.gitkeep
+
+# macOS
+.DS_Store

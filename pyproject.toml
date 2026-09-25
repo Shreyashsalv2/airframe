@@ -1,0 +1,97 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "airframe"
+version = "0.1.0"
+description = "Wireless connectivity test automation and AI triage platform"
+requires-python = ">=3.11"
+dependencies = [
+    "pytest>=8.0",
+    "pytest-xdist>=3.5",
+    "scapy>=2.5",
+    "numpy>=1.26",
+    "scikit-learn>=1.4",
+    "jinja2>=3.1",
+    "rich>=13.7",
+    "openai>=1.30",
+    "mcp>=1.2",
+]
+
+[project.optional-dependencies]
+dev = ["ruff>=0.5", "mypy>=1.10"]
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.setuptools.package-data]
+"airframe.store" = ["*.sql"]
+"airframe.report" = ["templates/*"]
+"airframe.triage" = ["prompts/*"]
+
+# ---------------------------------------------------------------- pytest
+# Note: `addopts` deliberately does NOT include -p airframe_plugin.
+# The plugin is loaded from tests/conftest.py via pytest_plugins so that
+# it is discovered whether the suite is run from the repo root or a subdir.
+[tool.pytest.ini_options]
+minversion = "8.0"
+testpaths = ["tests"]
+python_files = ["test_*.py"]
+addopts = "-ra --strict-markers --strict-config"
+markers = [
+    "band(name): 802.11 band under test (2.4GHz, 5GHz, 6GHz)",
+    "security(name): security mode (open, wpa2_psk, wpa3_sae, wpa2_enterprise)",
+    "phy(name): PHY generation (11n, 11ac, 11ax, 11be)",
+    "width(mhz): channel width in MHz (20, 40, 80, 160)",
+    "fault(name): fault deliberately injected into the DUT",
+    "requires_capability(name): skip unless the active DUT advertises this capability",
+    "slow: takes more than a couple of seconds",
+    "network: needs real internet egress (excluded in CI)",
+]
+filterwarnings = ["ignore::DeprecationWarning:scapy.*"]
+
+# ---------------------------------------------------------------- lint
+[tool.ruff]
+line-length = 100
+target-version = "py311"
+src = ["src", "tests"]
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP", "B", "SIM", "C4", "RET"]
+ignore = [
+    "E501",    # line length — formatting is handled by hand here, comments explain code
+    "B008",    # function call in default arg — not a pattern this codebase uses unsafely
+    # UP042 wants `class X(StrEnum)` instead of `class X(str, Enum)`. Kept deliberately:
+    # StrEnum changes __str__ to return the bare value, and this codebase passes enums
+    # into f-strings in log messages and test IDs where `Band.GHZ_5` is the more
+    # debuggable rendering. Every wire-format use is explicit about `.value`, so the
+    # distinction is intentional rather than an oversight.
+    "UP042",
+    # SIM105 wants contextlib.suppress instead of try/except/pass. The explicit form is
+    # kept where the suppressed exception is itself the documentation — e.g. "WAL is
+    # unavailable on some network filesystems; not fatal" reads better as a commented
+    # except block than as a bare suppress().
+    "SIM105",
+]
+
+[tool.ruff.lint.per-file-ignores]
+# SIM102 wants nested `if`s collapsed with `and`. In these three the nesting is the
+# documentation: an outer condition selects a CASE (which reason code, which field is
+# present) and the inner one refines it. Collapsing loses that reading, and each
+# branch carries its own comment explaining the case it handles.
+"src/airframe/pcap/anomaly.py" = ["SIM102"]
+"src/airframe/pcap/assoc.py" = ["SIM102"]
+"src/airframe/pcap/tshark_check.py" = ["SIM102"]
+# B027 flags `DUT.close()` as an empty method on an ABC without @abstractmethod. That
+# is intentional: close() has a no-op default so a backend needing no cleanup does not
+# have to implement it, while the docstring still states the idempotency contract.
+# Making it abstract would force boilerplate on every backend for no benefit.
+"src/airframe/dut/base.py" = ["B027"]
+
+[tool.mypy]
+python_version = "3.11"
+packages = ["airframe"]
+ignore_missing_imports = true
+warn_unused_ignores = false
+disallow_untyped_defs = false
