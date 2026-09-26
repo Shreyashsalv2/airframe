@@ -18,10 +18,10 @@ from pathlib import Path
 from typing import Any
 
 from airframe.dut.base import (
+    DUT,
     Band,
     Capability,
     ConnectResult,
-    DUT,
     DUTError,
     LinkStats,
     NetworkConfig,
