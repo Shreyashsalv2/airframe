@@ -17,6 +17,7 @@ BackendFactory = Callable[..., DUT]
 _BACKENDS: dict[str, str] = {
     "sim": "airframe.dut.sim:SimDUT",
     "macos": "airframe.dut.macos:MacOSDUT",
+    "replay": "airframe.dut.replay:ReplayDUT",
 }
 
 

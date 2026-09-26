@@ -66,7 +66,7 @@ def pytest_addoption(parser: pytest.Parser) -> None:
         "--dut",
         action="store",
         default=os.environ.get("AIRFRAME_DUT", "sim"),
-        choices=["sim", "macos"],
+        choices=["sim", "macos", "replay"],
         help="which device-under-test backend to run against (default: sim)",
     )
     group.addoption(

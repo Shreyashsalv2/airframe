@@ -154,7 +154,11 @@ def test_stats_are_stable_across_consecutive_reads(dut: DUT) -> None:
 def test_backend_reports_an_identity(shared_dut: DUT) -> None:
     identity = shared_dut.identity()
     assert identity and len(identity) > 5, "every backend must describe itself"
-    assert shared_dut.backend in ("sim", "macos")
+    # Deliberately NOT a hardcoded list of backend names. A test that knows which
+    # backends exist is a test that breaks every time one is added — which is exactly
+    # what happened when the replay backend arrived. Assert the contract (it has a
+    # name), not the roster.
+    assert shared_dut.backend and shared_dut.backend.isidentifier()
 
 
 def test_capabilities_are_declared_and_coherent(shared_dut: DUT) -> None:
@@ -167,9 +171,15 @@ def test_capabilities_are_declared_and_coherent(shared_dut: DUT) -> None:
     caps = shared_dut.capabilities
     assert caps, "a backend with no capabilities can run no tests"
 
-    if Capability.DETERMINISTIC in caps:
-        assert Capability.FAULT_INJECTION in caps, (
-            "a deterministic backend is a simulator, so it should support fault injection"
+    # NOTE: an earlier version asserted "deterministic implies fault injection", on the
+    # reasoning that a deterministic backend must be a simulator. That is false, and the
+    # replay backend is the counterexample: a recording is perfectly deterministic and
+    # cannot be ordered to fail differently, because it already happened. The assumption
+    # survived only because two backends happened to satisfy it.
+    if Capability.FAULT_INJECTION in caps:
+        assert Capability.DETERMINISTIC in caps, (
+            "a backend that can be ordered to fail must be reproducible, or the "
+            "failure it produces cannot be investigated"
         )
     if shared_dut.backend == "macos":
         assert Capability.DETERMINISTIC not in caps, (
