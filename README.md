@@ -120,7 +120,7 @@ make triage
 
 | Layer | Directory | What it is |
 | --- | --- | --- |
-| **DUT simulator** | `sim/` | C++17. An 802.11 station state machine with 12 injectable faults. Emits genuine `.pcap` files and `wifid`-style logs. Fully deterministic: the same seed reproduces byte-identical output. Uses virtual time, so a 2.4-second association completes in microseconds. |
+| **DUT simulator** | `sim/` | C++17. An 802.11 station state machine with 11 injectable faults. Emits genuine `.pcap` files and `wifid`-style logs. Fully deterministic: the same seed reproduces byte-identical output. Uses virtual time, so a 2.4-second association completes in microseconds. |
 | **Abstraction** | `src/airframe/dut/` | The `DUT` protocol plus two backends. The most important interface in the project. |
 | **Test framework** | `tests/` | The pytest suite and a custom plugin: capability gating, result persistence, and retries that **record flakes rather than hiding them**. |
 | **Packet forensics** | `src/airframe/pcap/` | Dissects 802.11, reconstructs the association sequence, names the failing stage and its IEEE code. Cross-validated against `tshark`. Includes Scapy synthesis of attack and malformed frames for negative testing. |
