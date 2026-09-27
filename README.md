@@ -177,9 +177,7 @@ and the part that actually teaches. A sample:
 | --- | --- |
 | [ARCHITECTURE.md](ARCHITECTURE.md) | Every significant decision, the alternative rejected, and what it cost |
 | [BUILD_JOURNAL.md](BUILD_JOURNAL.md) | 19 real bugs, honestly recorded |
-| [TEACHING_PLAN.md](TEACHING_PLAN.md) | A 3-day curriculum for learning this codebase from zero |
-| [CHEATSHEET.md](CHEATSHEET.md) | ~40 interview questions about this project, with answers |
-| [PITCH.md](PITCH.md) | How to present it in 60 seconds |
+| [docs/FLOW.md](docs/FLOW.md) | Plain-language walkthrough: what happens, start to end, when you run the suite |
 
 ## Commands
 

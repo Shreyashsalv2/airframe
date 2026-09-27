@@ -29,3 +29,22 @@ data/corpus_manifest.json
 
 # macOS
 .DS_Store
+
+# Personal study and interview-preparation material.
+#
+# These are deliberately not published. They are working notes for learning this
+# codebase, not part of the engineering project, and they are of no use to anyone
+# cloning the repo. They remain on disk locally.
+#
+#   TEACHING_PLAN.md   the 3-day curriculum
+#   REVISION.md        condensed revision notes
+#   CHEATSHEET.md      interview Q&A
+#   PITCH.md           how to present the project
+#   DAY_LOG.md         running record of the learning sessions
+#   RESUME.md          session state notes
+TEACHING_PLAN.md
+REVISION.md
+CHEATSHEET.md
+PITCH.md
+DAY_LOG.md
+RESUME.md
